@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=nvcr.io/nvidia/l4t-base:r32.5.0
+ARG BASE_IMAGE=ubuntu:focal
 FROM ${BASE_IMAGE}
 
 ARG ROS_PKG=ros_base
