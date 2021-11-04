@@ -32,16 +32,18 @@ RUN apt-get update && \
           python3-rosinstall-generator \
           python3-vcstool \
           build-essential && \
-    rosdep init && \
-    rosdep update && \
+    sudo rosdep init && \
+    sudo rosdep update && \
     rm -rf /var/lib/apt/lists/*
 
 RUN mkdir ros_catkin_ws && \
     cd ros_catkin_ws && \
-    rosinstall_generator desktop --rosdistro noetic --deps --tar > noetic-desktop.rosinstall && \
+    rosinstall_generator ${ROS_PKG} --rosdistro ${ROS_DISTRO} --deps --tar > ${ROS_DISTRO}-${ROS_PKG}.rosinstall && \
     mkdir ./src && \
-    vcs import --input noetic-desktop.rosinstall ./src && \
+    vcs import --input ${ROS_DISTRO}-${ROS_PKG}.rosinstall ./src && \
     rosdep install --from-paths ./src --ignore-packages-from-source --rosdistro noetic -y && \
+    python3 ./src/catkin/bin/catkin_make_isolated --install -DCMAKE_BUILD_TYPE=Release && \
+    rm -rf /var/lib/apt/lists/*
     
 RUN source ~/ros_catkin_ws/install_isolated/setup.bash
 WORKDIR /
